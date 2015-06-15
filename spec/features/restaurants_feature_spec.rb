@@ -60,7 +60,7 @@ feature 'restaurants' do
 
   end
 
-  context 'deleting restaurants' do 
+  context 'deleting restaurants' do
 
     before {Restaurant.create name: 'Trade'}
 
