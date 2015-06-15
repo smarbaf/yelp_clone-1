@@ -33,8 +33,7 @@ feature 'restaurants' do
   end
 
   context 'viewing restaurants' do
-
-    let!(:chipotle){Restaurant.create(name: 'Chipotle')}
+    let!(:chipotle) { Restaurant.create(name: 'Chipotle') }
 
     scenario 'lets a user view a restaurant' do
       visit '/restaurants'
@@ -45,8 +44,7 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-
-    before {Restaurant.create name:'Chipotle'}
+    before { Restaurant.create name: 'Chipotle' }
 
     scenario 'let a user edit a restaurant' do
       visit '/restaurants'
@@ -55,14 +53,11 @@ feature 'restaurants' do
       click_button 'Update Restaurant'
       expect(page).to have_content 'Chipotle Mexican Grill'
       expect(current_path).to eq '/restaurants'
-
     end
-
   end
 
   context 'deleting restaurants' do
-
-    before {Restaurant.create name: 'Trade'}
+    before { Restaurant.create name: 'Trade' }
 
     scenario 'removes a restaurant when a user clicks a delete link' do
       visit '/restaurants'
@@ -71,5 +66,4 @@ feature 'restaurants' do
       expect(page).to have_content 'Restaurant deleted successfully'
     end
   end
-
 end
