@@ -22,7 +22,7 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
-    scenario 'prompts user to fill out a form, then displays the new restaurant' do 
+    scenario 'prompts user to fill out a form, then displays the new restaurant' do
       visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'Chipotle'
@@ -32,15 +32,32 @@ feature 'restaurants' do
     end
   end
 
-  context 'viewing restaurants' do 
+  context 'viewing restaurants' do
 
     let!(:chipotle){Restaurant.create(name: 'Chipotle')}
 
-    scenario 'lets a user view a restaurant' do 
+    scenario 'lets a user view a restaurant' do
       visit '/restaurants'
       click_link 'Chipotle'
       expect(page).to have_content 'Chipotle'
       expect(current_path).to eq "/restaurants/#{chipotle.id}"
     end
   end
+
+  context 'editing restaurants' do
+
+    before {Restaurant.create name:'Chipotle'}
+
+    scenario 'let a user edit a restaurant' do
+      visit '/restaurants'
+      click_link 'Edit Chipotle'
+      fill_in 'Name', with: 'Chipotle Mexican Grill'
+      click_button 'Update Restaurant'
+      expect(page).to have_content 'Chipotle Mexican Grill'
+      expect(current_path).to eq '/restaurants'
+
+    end
+
+  end
+
 end
