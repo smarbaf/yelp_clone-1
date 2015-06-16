@@ -23,6 +23,11 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
+      User.create(email: 'test@test.com', password: 'test1234')
+      visit '/users/sign_in'
+      fill_in 'Email', with: 'test@test.com'
+      fill_in 'Password', with: 'test1234'
+      click_button 'Log in'
       visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'Chipotle'
