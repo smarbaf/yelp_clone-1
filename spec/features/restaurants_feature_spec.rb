@@ -1,4 +1,7 @@
 require 'rails_helper'
+require_relative 'helpers/session'
+include SessionHelpers
+
 
 feature 'restaurants' do
   context 'no restaurants have been added' do
@@ -23,11 +26,7 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
-      User.create(email: 'test@test.com', password: 'test1234')
-      visit '/users/sign_in'
-      fill_in 'Email', with: 'test@test.com'
-      fill_in 'Password', with: 'test1234'
-      click_button 'Log in'
+      sign_in
       visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'Chipotle'
@@ -38,6 +37,7 @@ feature 'restaurants' do
 
     context 'an invalid restaurant' do
       it 'does not let you submit a name that is too short' do
+        sign_in
         visit '/restaurants'
         click_link 'Add a restaurant'
         fill_in 'Name', with: 'kf'
@@ -48,14 +48,14 @@ feature 'restaurants' do
     end
 
     it 'is not valid unless it has a unique name' do
-      Restaurant.create(name: "Moe's Tavern")
+      create_restaurant("Moe's Tavern")
       restaurant = Restaurant.new(name: "Moe's Tavern")
       expect(restaurant).to have(1).error_on(:name)
     end
   end
 
   context 'viewing restaurants' do
-    let!(:chipotle) { Restaurant.create(name: 'Chipotle') }
+    let!(:chipotle) {create_restaurant("Chipotle")}
 
     scenario 'lets a user view a restaurant' do
       visit '/restaurants'
@@ -66,7 +66,10 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-    before { Restaurant.create name: 'Chipotle' }
+    before do
+      create_restaurant("Chipotle")
+      sign_in
+    end
 
     scenario 'let a user edit a restaurant' do
       visit '/restaurants'
@@ -79,7 +82,10 @@ feature 'restaurants' do
   end
 
   context 'deleting restaurants' do
-    before { Restaurant.create name: 'Trade' }
+    before do
+      create_restaurant("Trade")
+      sign_in
+    end
 
     scenario 'removes a restaurant when a user clicks a delete link' do
       visit '/restaurants'
