@@ -98,6 +98,25 @@ feature 'restaurants' do
       visit '/restaurants'
       expect(page).to_not have_content('Delete Trade')
     end
-
+    scenario 'logged in user may only edit and/or delete owned items' do
+      User.create(email: 'fiona@mail.com', password: 'test1234')
+      visit '/users/sign_in'
+      fill_in 'Email', with: 'fiona@mail.com'
+      fill_in 'Password', with: 'test1234'
+      click_button 'Log in'
+      visit '/restaurants'
+      click_link 'Add a restaurant'
+      fill_in 'Name', with: 'fifis'
+      click_button 'Create Restaurant'
+      click_link 'Sign out'
+      User.create(email: 'rodney@mail.com', password: 'test1234')
+      visit '/users/sign_in'
+      fill_in 'Email', with: 'rodney@mail.com'
+      fill_in 'Password', with: 'test1234'
+      click_button 'Log in'
+      visit '/restaurants'
+      expect(page).not_to have_content('Delete fifis')
+      expect(page).not_to have_content('Edit fifis')
+    end
   end
 end
