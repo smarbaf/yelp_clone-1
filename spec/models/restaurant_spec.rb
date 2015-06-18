@@ -1,4 +1,5 @@
 require 'spec_helper'
+include SessionHelpers
 
 describe Restaurant, :type => :model do
   it 'is not valid with a name of less than three characters' do
@@ -7,6 +8,7 @@ describe Restaurant, :type => :model do
     expect(restaurant).not_to be_valid
   end
 end
+
 describe Restaurant, type: :model do
   it { is_expected.to have_many(:reviews).dependent(:destroy) }
 end
@@ -17,5 +19,13 @@ describe '#average_rating' do
       restaurant = Restaurant.create(name: 'The Ivy')
       expect(restaurant.average_rating).to eq 'N/A'
     end
+  end
+end
+
+context 'with 1 review' do
+  it 'returns that rating' do
+    restaurant = Restaurant.create(name: 'The Ivy')
+    restaurant.reviews.create(rating: 4)
+    expect(restaurant.average_rating).to eq(4)
   end
 end
