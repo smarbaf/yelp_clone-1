@@ -1,5 +1,5 @@
 require 'spec_helper'
-include SessionHelpers
+
 
 describe Restaurant, :type => :model do
   it 'is not valid with a name of less than three characters' do
