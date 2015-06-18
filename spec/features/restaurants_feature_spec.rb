@@ -26,7 +26,7 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
-      sign_in
+      sign_up
       visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'Chipotle'
@@ -37,7 +37,7 @@ feature 'restaurants' do
 
     context 'an invalid restaurant' do
       it 'does not let you submit a name that is too short' do
-        sign_in
+        sign_up
         visit '/restaurants'
         click_link 'Add a restaurant'
         fill_in 'Name', with: 'kf'
@@ -48,6 +48,7 @@ feature 'restaurants' do
     end
 
     it 'is not valid unless it has a unique name' do
+      sign_up
       create_restaurant("Moe's Tavern")
       restaurant = Restaurant.new(name: "Moe's Tavern")
       expect(restaurant).to have(1).error_on(:name)
@@ -55,26 +56,30 @@ feature 'restaurants' do
   end
 
   context 'viewing restaurants' do
-    let!(:chipotle) {create_restaurant("Chipotle")}
+    # let!(:chipotle) {create_restaurant("Chipotle")}
 
     scenario 'lets a user view a restaurant' do
+      sign_up
       visit '/restaurants'
+      create_restaurant('Chipotle')
       click_link 'Chipotle'
       expect(page).to have_content 'Chipotle'
-      expect(current_path).to eq "/restaurants/#{chipotle.id}"
+      # expect(current_path).to eq "/restaurants/#{chipotle.id}"
     end
   end
 
   context 'editing restaurants' do
-    before do
-      create_restaurant("Chipotle")
-      sign_in
-    end
+    # before do
+    #   create_restaurant("Chipotle")
+    #   sign_in
+    # end
 
     scenario 'let a user edit a restaurant' do
+      sign_up
+      create_restaurant('Chipotle')
       visit '/restaurants'
       click_link 'Edit Chipotle'
-      fill_in 'Name', with: 'Chipotle Mexican Grill'
+      fill_in 'Name', with: name
       click_button 'Update Restaurant'
       expect(page).to have_content 'Chipotle Mexican Grill'
       expect(current_path).to eq '/restaurants'
@@ -98,22 +103,14 @@ feature 'restaurants' do
       visit '/restaurants'
       expect(page).to_not have_content('Delete Trade')
     end
-    scenario 'logged in user may only edit and/or delete owned items' do
-      User.create(email: 'fiona@mail.com', password: 'test1234')
-      visit '/users/sign_in'
-      fill_in 'Email', with: 'fiona@mail.com'
-      fill_in 'Password', with: 'test1234'
-      click_button 'Log in'
+    scenario 'logged in user may not edit and/or delete non-owned restaurants' do
+      sign_up('fiona@mail.com')
       visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'fifis'
       click_button 'Create Restaurant'
       click_link 'Sign out'
-      User.create(email: 'rodney@mail.com', password: 'test1234')
-      visit '/users/sign_in'
-      fill_in 'Email', with: 'rodney@mail.com'
-      fill_in 'Password', with: 'test1234'
-      click_button 'Log in'
+      sign_up('rodney@mail.com')
       visit '/restaurants'
       expect(page).not_to have_content('Delete fifis')
       expect(page).not_to have_content('Edit fifis')
