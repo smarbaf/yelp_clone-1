@@ -2,6 +2,7 @@ require 'rails_helper'
 
 feature 'endorsing reviews' do
   before do
+    sign_up
     kfc = Restaurant.create(name: 'KFC')
     kfc.reviews.create(rating: 3, thoughts: 'It was an abomination')
   end
