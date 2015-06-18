@@ -88,11 +88,11 @@ feature 'restaurants' do
 
   context 'deleting restaurants' do
     before do
+      sign_up
       create_restaurant("Trade")
     end
 
     scenario 'removes a restaurant when a user clicks a delete link' do
-      sign_in
       visit '/restaurants'
       click_link 'Delete Trade'
       expect(page).not_to have_content 'Trade'
@@ -100,20 +100,16 @@ feature 'restaurants' do
     end
 
     scenario 'non-logged in user cannot see delete buttons' do
+      click_link 'Sign out'
       visit '/restaurants'
       expect(page).to_not have_content('Delete Trade')
     end
     scenario 'logged in user may not edit and/or delete non-owned restaurants' do
-      sign_up('fiona@mail.com')
-      visit '/restaurants'
-      click_link 'Add a restaurant'
-      fill_in 'Name', with: 'fifis'
-      click_button 'Create Restaurant'
       click_link 'Sign out'
-      sign_up('rodney@mail.com')
+      sign_up('daniel@mail.com')
       visit '/restaurants'
-      expect(page).not_to have_content('Delete fifis')
-      expect(page).not_to have_content('Edit fifis')
+      expect(page).not_to have_content('Delete Trade')
+      expect(page).not_to have_content('Edit Trade')
     end
   end
 end

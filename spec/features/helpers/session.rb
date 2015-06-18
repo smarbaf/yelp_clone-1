@@ -17,10 +17,10 @@ module SessionHelpers
     click_button 'Log in'
   end
 
-  def create_restaurant(rname = 'Elven Sweets')
+  def create_restaurant(name = 'Elven Sweets')
     visit '/restaurants'
     click_link 'Add a restaurant'
-    fill_in 'Name', with: rname
+    fill_in 'Name', with: name
     click_button 'Create Restaurant'
   end
 end
