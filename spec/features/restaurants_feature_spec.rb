@@ -79,7 +79,7 @@ feature 'restaurants' do
       create_restaurant('Chipotle')
       visit '/restaurants'
       click_link 'Edit Chipotle'
-      fill_in 'Name', with: name
+      fill_in 'Name', with: 'Chipotle Mexican Grill'
       click_button 'Update Restaurant'
       expect(page).to have_content 'Chipotle Mexican Grill'
       expect(current_path).to eq '/restaurants'
