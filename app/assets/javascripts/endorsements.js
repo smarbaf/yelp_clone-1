@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  $('.ndorsements-link').on('click', function(event){
+  $('.endorsements-link').on('click', function(event){
     event.preventDefault();
 
     var endorsementCount = $(this).siblings('.endorsements_count');

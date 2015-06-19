@@ -1,4 +1,6 @@
+<h1><!--%= "Hello #{current_user.name}" %!--></h1>
 <% if @restaurants.any? %>
+
   <% @restaurants.each do |restaurant| %>
     <h2><%= link_to restaurant.name, restaurant_path(restaurant) %></h2>
     <% if current_user ==  restaurant.user %>
@@ -12,10 +14,10 @@
   <ul>
     <h3>Average rating: <%= star_rating(restaurant.average_rating) %><h3>
     <% restaurant.reviews.each do |review| %>
-    <p><%= pluralize review.endorsements.count, 'endorsement' %></p>
       <li>
-        <%= review.thoughts %> - <strong><%= review.rating %>/5</strong>
-    <%= link_to "Endorse", review_endorsements_path(review), method: :post %>
+        <%= review.thoughts %> Average rating: <%= star_rating(restaurant.average_rating) %>
+    <%= link_to "Endorse", review_endorsements_path(review), class: 'endorsements-link' %>
+    <span class="endorsements_count"> <%= review.endorsements.count %> </span> <%= 'endorsement'.pluralize(review.endorsements.count) %>
       </li>
     <% end %>
   </ul>
