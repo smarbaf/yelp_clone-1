@@ -41,5 +41,4 @@ feature 'reviewing' do
     leave_review('Magical wonderland', '5')
     expect(page).to have_content('Average rating: ★★★★☆')
   end
-
 end

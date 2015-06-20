@@ -1,32 +1,30 @@
 <h1><!--%= "Hello #{current_user.name}" %!--></h1>
 <% if @restaurants.any? %>
-
-  <% @restaurants.each do |restaurant| %>
-    <h2><%= link_to restaurant.name, restaurant_path(restaurant) %></h2>
-    <% if current_user ==  restaurant.user %>
-    <%= link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant) %><br>
-    <%= link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete %><br>
-    <% end %>
-    <%= link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant) %>
-    <h3>Reviews for <%= restaurant.name %></h3>
-
+<% @restaurants.each do |restaurant| %>
+<h2><%= link_to restaurant.name, restaurant_path(restaurant) %></h2>
+<% image_tag restaurant.image.url(:thumb) %>
+<% if current_user ==  restaurant.user %>
+<%= link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant) %><br>
+<%= link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete %><br>
+<% end %>
+<%= link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant) %>
+<h3>Reviews for <%= restaurant.name %></h3>
 <% if restaurant.reviews.any? %>
-  <ul>
-    <h3>Average rating: <%= star_rating(restaurant.average_rating) %><h3>
-    <% restaurant.reviews.each do |review| %>
-      <li>
-        <%= review.thoughts %> Average rating: <%= star_rating(restaurant.average_rating) %>
+<ul>
+  <h3>Average rating: <%= star_rating(restaurant.average_rating) %><h3>
+  <% restaurant.reviews.each do |review| %>
+  <li>
+    <%= review.thoughts %> Average rating: <%= star_rating(restaurant.average_rating) %>
     <%= link_to "Endorse", review_endorsements_path(review), class: 'endorsements-link' %>
     <span class="endorsements_count"> <%= review.endorsements.count %> </span> <%= 'endorsement'.pluralize(review.endorsements.count) %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No reviews.</p>
-<% end %>
+  </li>
   <% end %>
+</ul>
 <% else %>
-  <h1>No restaurants yet</h1>
+<p>No reviews.</p>
 <% end %>
-
+<% end %>
+<% else %>
+<h1>No restaurants yet</h1>
+<% end %>
 <%= link_to 'Add a restaurant', new_restaurant_path %>
